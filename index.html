@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Schema Studio Biblico</title>
+    <!-- Importazione del font Cabin da Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2980b9">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
     <style>
         body { 
+            /* Nuovo font Cabin e Calibri applicato qui */
             font-family: 'Cabin', Calibri, sans-serif; 
             color: #2c3e50; 
             margin: 0; 
@@ -33,7 +35,7 @@
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         
         .meta-info { display: flex; gap: 10px; margin-bottom: 15px; }
-        .meta-info input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        .meta-info input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: inherit; }
         
         .warning-box { background-color: #fff3e0; border-left: 4px solid #ff9800; padding: 12px; margin-bottom: 20px; border-radius: 4px; font-size: 0.9rem; color: #e65100; }
         
@@ -75,7 +77,7 @@
             padding: 5px 8px; border-radius: 8px; border: 1px solid #dee2e6;
         }
         .timer-wrapper input {
-            width: 45px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 0.9rem;
+            width: 45px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 0.9rem; font-family: inherit;
         }
         .timer-wrapper button {
             border: none; background: #2980b9; color: white; border-radius: 4px; 
@@ -94,7 +96,7 @@
         .ignored-card { opacity: 0.7; background-color: #f9f9f9; border: 1px dashed #ccc; }
         .ignored-card .step-number { background-color: #95a5a6; }
         
-        .btn-clear { display: block; width: 100%; padding: 15px; background-color: transparent; color: #e74c3c; border: 2px solid #e74c3c; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 30px; text-align: center; }
+        .btn-clear { display: block; width: 100%; padding: 15px; background-color: transparent; color: #e74c3c; border: 2px solid #e74c3c; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 30px; text-align: center; font-family: inherit;}
         .btn-clear:active { background-color: #e74c3c; color: white; }
 
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
@@ -103,8 +105,8 @@
 <body>
 
     <div class="app-bar">
-        <h1>Cammina coraggiosamente con Dio</h1>
-        <p>Schema Studio Biblico</p>
+        <h1>Schema Studio Biblico</h1>
+        <p>Cammina coraggiosamente con Dio</p>
     </div>
 
     <div class="container">
@@ -288,7 +290,7 @@
             <div class="instructions">NON da trattare durante lo studio. (Ricerca personale).</div>
         </div>
 
-        <button class="btn-clear" id="btn_cancella">Svuota tutti i campi</button>
+        <button type="button" class="btn-clear" id="btn_cancella">Svuota tutti i campi</button>
     </div>
 
     <div class="toast" id="toast">Salvato</div>
@@ -369,12 +371,5 @@
             });
         }
 
-        // --- AUTO-SAVE LOGIC (Supporta contenteditable) ---
-        const elements = document.querySelectorAll('input:not(.t-min), .editor');
-        let saveTimeout;
-        const toast = document.getElementById('toast');
-
-        function showToast() {
-            toast.style.opacity = '1';
-            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
-        }
+        // --- AUTO-SAVE LOGIC ---
+        const elements = document.querySelectorAll('input:not(.t-min), .edit
