@@ -11,7 +11,6 @@
     <link rel="icon" href="icon.svg" type="image/svg+xml">
     <style>
         body { 
-            /* Nuovo font Cabin e Calibri applicato qui */
             font-family: 'Cabin', Calibri, sans-serif; 
             color: #2c3e50; 
             margin: 0; 
@@ -87,7 +86,6 @@
         .timer-wrapper button.t-reset { background: #7f8c8d; }
         .t-display { font-family: monospace; font-weight: bold; margin-left: 5px; font-size: 1.1rem; color: #2c3e50; min-width: 45px; text-align: right; }
         .timer-alert { color: #e74c3c !important; animation: blink 1s infinite; }
-
         @keyframes blink { 50% { opacity: 0.5; } }
         
         .checkbox-wrapper { display: flex; align-items: center; gap: 10px; font-size: 1rem; padding: 10px 0; }
@@ -96,7 +94,21 @@
         .ignored-card { opacity: 0.7; background-color: #f9f9f9; border: 1px dashed #ccc; }
         .ignored-card .step-number { background-color: #95a5a6; }
         
-        .btn-clear { display: block; width: 100%; padding: 15px; background-color: transparent; color: #e74c3c; border: 2px solid #e74c3c; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 30px; text-align: center; font-family: inherit;}
+        /* Nuovi Pulsanti di Azione */
+        .action-container {
+            display: flex; flex-direction: column; gap: 10px; margin-top: 30px;
+        }
+        .btn-action {
+            display: block; width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; text-align: center; font-family: inherit; border: none; box-sizing: border-box;
+        }
+        .btn-salva { background-color: #27ae60; color: white; }
+        .btn-salva:active { background-color: #219653; }
+        
+        .btn-grid { display: flex; gap: 10px; }
+        .btn-backup, .btn-ripristina { flex: 1; background-color: #34495e; color: white; padding: 12px; }
+        .btn-backup:active, .btn-ripristina:active { background-color: #2c3e50; }
+        
+        .btn-clear { background-color: transparent; color: #e74c3c; border: 2px solid #e74c3c; }
         .btn-clear:active { background-color: #e74c3c; color: white; }
 
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
@@ -105,8 +117,8 @@
 <body>
 
     <div class="app-bar">
-        <h1>Cammina coraggiosamente con Dio</h1>
-        <p>Schema Studio Biblico</p>
+        <h1>Schema Studio Biblico</h1>
+        <p>Cammina coraggiosamente con Dio</p>
     </div>
 
     <div class="container">
@@ -121,16 +133,17 @@
 
         <div class="section-title">Prima Parte: Il Racconto</div>
 
+        <!-- SCHEDA 1 -->
         <div class="card">
             <div class="card-header">
                 <div class="step-header-left">
                     <div class="step-number">1</div>
                     <div class="step-title">Lettura del Racconto</div>
                 </div>
-                <div class="timer-wrapper" id="timer_1">
-                    <input type="number" class="t-min" value="5" min="1" max="99" title="Minuti">
-                    <button class="t-play" title="Avvia/Pausa">▶</button>
-                    <button class="t-reset" title="Azzera">↺</button>
+                <div class="timer-wrapper">
+                    <input type="number" class="t-min" value="5" min="1" max="99">
+                    <button class="t-play">▶</button>
+                    <button class="t-reset">↺</button>
                     <span class="t-display">05:00</span>
                 </div>
             </div>
@@ -140,13 +153,14 @@
             </label>
         </div>
 
+        <!-- SCHEDA 2 -->
         <div class="card">
             <div class="card-header">
                 <div class="step-header-left">
                     <div class="step-number">2</div>
                     <div class="step-title">Leggi questi passi...</div>
                 </div>
-                <div class="timer-wrapper" id="timer_2">
+                <div class="timer-wrapper">
                     <input type="number" class="t-min" value="5" min="1" max="99">
                     <button class="t-play">▶</button>
                     <button class="t-reset">↺</button>
@@ -163,13 +177,14 @@
             <div class="editor" contenteditable="true" id="passi_biblici" data-placeholder="Es. Giosuè 1:9 - spunto da evidenziare..."></div>
         </div>
 
+        <!-- SCHEDA 3 -->
         <div class="card">
             <div class="card-header">
                 <div class="step-header-left">
                     <div class="step-number">3</div>
                     <div class="step-title">Per parlarne insieme</div>
                 </div>
-                <div class="timer-wrapper" id="timer_3">
+                <div class="timer-wrapper">
                     <input type="number" class="t-min" value="10" min="1" max="99">
                     <button class="t-play">▶</button>
                     <button class="t-reset">↺</button>
@@ -186,13 +201,14 @@
             <div class="editor" contenteditable="true" id="parlarne_insieme" data-placeholder="Scrivi qui i tuoi appunti..."></div>
         </div>
 
+        <!-- SCHEDA 4 -->
         <div class="card">
             <div class="card-header">
                 <div class="step-header-left">
                     <div class="step-number">4</div>
                     <div class="step-title">Esame dell'Immagine</div>
                 </div>
-                <div class="timer-wrapper" id="timer_4">
+                <div class="timer-wrapper">
                     <input type="number" class="t-min" value="5" min="1" max="99">
                     <button class="t-play">▶</button>
                     <button class="t-reset">↺</button>
@@ -211,13 +227,14 @@
 
         <div class="section-title">Seconda Parte: Applicazione</div>
 
+        <!-- SCHEDA 5 -->
         <div class="card">
             <div class="card-header">
                 <div class="step-header-left">
                     <div class="step-number">5</div>
                     <div class="step-title">Vai più a fondo</div>
                 </div>
-                <div class="timer-wrapper" id="timer_5">
+                <div class="timer-wrapper">
                     <input type="number" class="t-min" value="15" min="1" max="99">
                     <button class="t-play">▶</button>
                     <button class="t-reset">↺</button>
@@ -234,13 +251,14 @@
             <div class="editor" contenteditable="true" id="vai_fondo" data-placeholder="Punti chiave dalle pubblicazioni..."></div>
         </div>
 
+        <!-- SCHEDA 6 -->
         <div class="card">
             <div class="card-header">
                 <div class="step-header-left">
                     <div class="step-number">6</div>
                     <div class="step-title">Una storia che ti riguarda</div>
                 </div>
-                <div class="timer-wrapper" id="timer_6">
+                <div class="timer-wrapper">
                     <input type="number" class="t-min" value="10" min="1" max="99">
                     <button class="t-play">▶</button>
                     <button class="t-reset">↺</button>
@@ -257,13 +275,14 @@
             <div class="editor" contenteditable="true" id="storia_riguarda" data-placeholder="Applicazione pratica per noi..."></div>
         </div>
 
+        <!-- SCHEDA 7 -->
         <div class="card">
             <div class="card-header">
                 <div class="step-header-left">
                     <div class="step-number">7</div>
                     <div class="step-title">Una prospettiva più ampia</div>
                 </div>
-                <div class="timer-wrapper" id="timer_7">
+                <div class="timer-wrapper">
                     <input type="number" class="t-min" value="5" min="1" max="99">
                     <button class="t-play">▶</button>
                     <button class="t-reset">↺</button>
@@ -290,86 +309,63 @@
             <div class="instructions">NON da trattare durante lo studio. (Ricerca personale).</div>
         </div>
 
-        <button type="button" class="btn-clear" id="btn_cancella">Svuota tutti i campi</button>
+        <!-- NUOVI PULSANTI DI GESTIONE -->
+        <div class="action-container">
+            <button type="button" class="btn-action btn-salva" id="btn_salva">💾 Salva Ora</button>
+            
+            <div class="btn-grid">
+                <button type="button" class="btn-action btn-backup" id="btn_backup">⬇️ Esporta Backup</button>
+                <label for="file_restore" class="btn-action btn-ripristina" style="cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0;">⬆️ Ripristina</label>
+                <input type="file" id="file_restore" accept=".json" style="display:none;">
+            </div>
+
+            <button type="button" class="btn-action btn-clear" id="btn_cancella">🗑️ Svuota tutti i campi</button>
+        </div>
     </div>
 
-    <div class="toast" id="toast">Salvato</div>
+    <div class="toast" id="toast">Operazione completata!</div>
 
     <script>
-        // --- TIMERS LOGIC ---
-        document.querySelectorAll('.timer-wrapper').forEach(wrapper => {
-            const input = wrapper.querySelector('.t-min');
-            const playBtn = wrapper.querySelector('.t-play');
-            const resetBtn = wrapper.querySelector('.t-reset');
-            const display = wrapper.querySelector('.t-display');
-            
-            let timeLeft = parseInt(input.value) * 60;
-            let isRunning = false;
-            let interval;
-
-            function updateDisplay() {
-                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                const s = (timeLeft % 60).toString().padStart(2, '0');
-                display.textContent = `${m}:${s}`;
-                
-                if(timeLeft <= 0) {
-                    display.classList.add('timer-alert');
-                } else {
-                    display.classList.remove('timer-alert');
-                }
-            }
-            updateDisplay();
-
-            input.addEventListener('change', () => {
-                if(!isRunning) {
-                    timeLeft = parseInt(input.value) * 60;
-                    updateDisplay();
-                }
-            });
-
-            playBtn.addEventListener('click', () => {
-                if(isRunning) {
-                    clearInterval(interval);
-                    playBtn.innerHTML = '▶';
-                    isRunning = false;
-                } else {
-                    if(timeLeft <= 0) timeLeft = parseInt(input.value) * 60;
-                    playBtn.innerHTML = '⏸';
-                    isRunning = true;
-                    interval = setInterval(() => {
-                        timeLeft--;
-                        updateDisplay();
-                        if(timeLeft <= 0) {
-                            clearInterval(interval);
-                            playBtn.innerHTML = '▶';
-                            isRunning = false;
-                            
-                            // Vibrazione se supportata
-                            if ("vibrate" in navigator) {
-                                navigator.vibrate([200, 100, 200, 100, 500]);
-                            }
-                        }
-                    }, 1000);
-                }
-            });
-
-            resetBtn.addEventListener('click', () => {
-                clearInterval(interval);
-                isRunning = false;
-                playBtn.innerHTML = '▶';
-                timeLeft = parseInt(input.value) * 60;
-                updateDisplay();
-            });
-        });
-
-        // --- PWA SERVICE WORKER ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('SW registrato', reg.scope))
-                    .catch(err => console.log('SW errore', err));
-            });
+        const toast = document.getElementById('toast');
+        function showToast(messaggio) {
+            toast.textContent = messaggio;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2500);
         }
 
-        // --- AUTO-SAVE LOGIC ---
-        const elements = document.querySelectorAll('input:not(.t-min), .edit
+        // --- GESTIONE ERRORI LOCALSTORAGE ---
+        function safeSetStorage(key, value) {
+            try { localStorage.setItem(key, value); return true; } 
+            catch(e) { return false; }
+        }
+        function safeGetStorage(key) {
+            try { return localStorage.getItem(key); } 
+            catch(e) { return null; }
+        }
+        function safeClearStorage() {
+            try { localStorage.clear(); } 
+            catch(e) {}
+        }
+
+        // --- TIMERS ---
+        try {
+            document.querySelectorAll('.timer-wrapper').forEach(wrapper => {
+                const input = wrapper.querySelector('.t-min');
+                const playBtn = wrapper.querySelector('.t-play');
+                const resetBtn = wrapper.querySelector('.t-reset');
+                const display = wrapper.querySelector('.t-display');
+                
+                let timeLeft = parseInt(input.value) * 60;
+                let isRunning = false;
+                let interval;
+
+                function updateDisplay() {
+                    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                    const s = (timeLeft % 60).toString().padStart(2, '0');
+                    display.textContent = `${m}:${s}`;
+                    if(timeLeft <= 0) display.classList.add('timer-alert');
+                    else display.classList.remove('timer-alert');
+                }
+                updateDisplay();
+
+                input.addEventListener('change', () 
