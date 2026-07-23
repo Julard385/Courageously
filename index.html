@@ -4,368 +4,254 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Schema Studio Biblico</title>
-    <!-- Importazione del font Cabin da Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2980b9">
-    <link rel="icon" href="icon.svg" type="image/svg+xml">
     <style>
-        body { 
-            font-family: 'Cabin', Calibri, sans-serif; 
-            color: #2c3e50; 
-            margin: 0; 
-            padding: 0; 
-            background-color: #f0f2f5; 
-            padding-bottom: 40px;
-        }
-        .app-bar {
-            background-color: #2980b9;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+        body { font-family: 'Cabin', Calibri, sans-serif; color: #2c3e50; margin: 0; padding: 0; background-color: #f0f2f5; padding-bottom: 40px; }
+        .app-bar { background-color: #2980b9; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .app-bar h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; }
         .app-bar p { margin: 2px 0 0 0; font-size: 0.8rem; opacity: 0.8; }
-        
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        
         .meta-info { display: flex; gap: 10px; margin-bottom: 15px; }
         .meta-info input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: inherit; }
-        
         .warning-box { background-color: #fff3e0; border-left: 4px solid #ff9800; padding: 12px; margin-bottom: 20px; border-radius: 4px; font-size: 0.9rem; color: #e65100; }
-        
         .section-title { font-size: 1.1rem; font-weight: bold; color: #7f8c8d; margin: 20px 0 10px 0; text-transform: uppercase; }
-        
         .card { background-color: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
         .step-header-left { display: flex; align-items: center; }
         .step-number { background-color: #2980b9; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: bold; margin-right: 10px; flex-shrink: 0; }
         .step-title { font-weight: bold; font-size: 1.05rem; color: #2c3e50; }
-        
         .instructions { font-size: 0.85rem; color: #7f8c8d; margin-bottom: 12px; line-height: 1.4; }
-        
-        /* Rich Text Editor */
-        .rich-toolbar {
-            display: flex; gap: 5px; background: #e9ecef; padding: 6px;
-            border: 1px solid #ddd; border-bottom: none;
-            border-top-left-radius: 8px; border-top-right-radius: 8px;
-            flex-wrap: wrap;
-        }
-        .rich-toolbar button {
-            background: white; border: 1px solid #ced4da; border-radius: 4px;
-            padding: 5px 12px; cursor: pointer; font-size: 1rem; font-family: serif; font-weight: bold;
-            color: #343a40; display: flex; align-items: center; justify-content: center;
-        }
-        .rich-toolbar button:hover, .rich-toolbar button:active { background: #dde2e6; }
-        .editor {
-            width: 100%; min-height: 120px; padding: 12px; border: 1px solid #ddd;
-            border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
-            font-family: inherit; font-size: 1rem; box-sizing: border-box; background-color: #fafafa;
-            outline: none; overflow-y: auto; line-height: 1.5;
-        }
+        .rich-toolbar { display: flex; gap: 5px; background: #e9ecef; padding: 6px; border: 1px solid #ddd; border-bottom: none; border-top-left-radius: 8px; border-top-right-radius: 8px; flex-wrap: wrap; }
+        .rich-toolbar button { background: white; border: 1px solid #ced4da; border-radius: 4px; padding: 5px 12px; cursor: pointer; font-size: 1rem; font-family: serif; font-weight: bold; color: #343a40; }
+        .editor { width: 100%; min-height: 120px; padding: 12px; border: 1px solid #ddd; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; font-family: inherit; font-size: 1rem; box-sizing: border-box; background-color: #fafafa; outline: none; overflow-y: auto; line-height: 1.5; }
         .editor:empty:before { content: attr(data-placeholder); color: #aaa; pointer-events: none; }
-        .editor:focus { background-color: #fff; border-color: #2980b9; }
-
-        /* Timer Styles */
-        .timer-wrapper {
-            display: flex; align-items: center; gap: 5px; background: #f8f9fa; 
-            padding: 5px 8px; border-radius: 8px; border: 1px solid #dee2e6;
-        }
-        .timer-wrapper input {
-            width: 45px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 0.9rem; font-family: inherit;
-        }
-        .timer-wrapper button {
-            border: none; background: #2980b9; color: white; border-radius: 4px; 
-            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; font-size: 0.9rem; padding: 0;
-        }
+        .timer-wrapper { display: flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 5px 8px; border-radius: 8px; border: 1px solid #dee2e6; }
+        .timer-wrapper input { width: 45px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 0.9rem; font-family: inherit; }
+        .timer-wrapper button { border: none; background: #2980b9; color: white; border-radius: 4px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; }
         .timer-wrapper button.t-reset { background: #7f8c8d; }
         .t-display { font-family: monospace; font-weight: bold; margin-left: 5px; font-size: 1.1rem; color: #2c3e50; min-width: 45px; text-align: right; }
         .timer-alert { color: #e74c3c !important; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0.5; } }
-        
         .checkbox-wrapper { display: flex; align-items: center; gap: 10px; font-size: 1rem; padding: 10px 0; }
         .checkbox-wrapper input[type="checkbox"] { width: 22px; height: 22px; accent-color: #2980b9; }
-        
         .ignored-card { opacity: 0.7; background-color: #f9f9f9; border: 1px dashed #ccc; }
         .ignored-card .step-number { background-color: #95a5a6; }
-        
-        /* Nuovi Pulsanti di Azione */
-        .action-container {
-            display: flex; flex-direction: column; gap: 10px; margin-top: 30px;
-        }
-        .btn-action {
-            display: block; width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; text-align: center; font-family: inherit; border: none; box-sizing: border-box;
-        }
+        .action-container { display: flex; flex-direction: column; gap: 10px; margin-top: 30px; }
+        .btn-action { display: block; width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; text-align: center; font-family: inherit; border: none; box-sizing: border-box; }
         .btn-salva { background-color: #27ae60; color: white; }
-        .btn-salva:active { background-color: #219653; }
-        
         .btn-grid { display: flex; gap: 10px; }
         .btn-backup, .btn-ripristina { flex: 1; background-color: #34495e; color: white; padding: 12px; }
-        .btn-backup:active, .btn-ripristina:active { background-color: #2c3e50; }
-        
         .btn-clear { background-color: transparent; color: #e74c3c; border: 2px solid #e74c3c; }
-        .btn-clear:active { background-color: #e74c3c; color: white; }
-
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
     </style>
 </head>
 <body>
-
     <div class="app-bar">
-        <h1>Schema Studio Biblico</h1>
-        <p>Cammina coraggiosamente con Dio</p>
+        <h1>Cammina coraggiosamente con Dio</h1>
+        <p>Schema Studio Biblico</p>
     </div>
-
     <div class="container">
         <div class="meta-info">
             <input type="text" id="capitolo" placeholder="Capitolo / Tema">
             <input type="date" id="data">
         </div>
-
         <div class="warning-box">
             <strong>⏳ Tempo:</strong> Bilancia bene la parte narrativa per lasciare spazio alle domande di riflessione.
         </div>
-
         <div class="section-title">Prima Parte: Il Racconto</div>
-
-        <!-- SCHEDA 1 -->
         <div class="card">
             <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">1</div>
-                    <div class="step-title">Lettura del Racconto</div>
-                </div>
-                <div class="timer-wrapper">
-                    <input type="number" class="t-min" value="5" min="1" max="99">
-                    <button class="t-play">▶</button>
-                    <button class="t-reset">↺</button>
-                    <span class="t-display">05:00</span>
-                </div>
+                <div class="step-header-left"><div class="step-number">1</div><div class="step-title">Lettura del Racconto</div></div>
+                <div class="timer-wrapper"><input type="number" class="t-min" value="5" min="1" max="99"><button class="t-play">▶</button><button class="t-reset">↺</button><span class="t-display">05:00</span></div>
             </div>
             <div class="instructions">Fai leggere le prime due pagine (il racconto) del capitolo.</div>
-            <label class="checkbox-wrapper">
-                <input type="checkbox" id="lettura_completata"> <span>Lettura completata</span>
-            </label>
+            <label class="checkbox-wrapper"><input type="checkbox" id="lettura_completata"> <span>Lettura completata</span></label>
         </div>
-
-        <!-- SCHEDA 2 -->
         <div class="card">
             <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">2</div>
-                    <div class="step-title">Leggi questi passi...</div>
-                </div>
-                <div class="timer-wrapper">
-                    <input type="number" class="t-min" value="5" min="1" max="99">
-                    <button class="t-play">▶</button>
-                    <button class="t-reset">↺</button>
-                    <span class="t-display">05:00</span>
-                </div>
+                <div class="step-header-left"><div class="step-number">2</div><div class="step-title">Leggi questi passi...</div></div>
+                <div class="timer-wrapper"><input type="number" class="t-min" value="5" min="1" max="99"><button class="t-play">▶</button><button class="t-reset">↺</button><span class="t-display">05:00</span></div>
             </div>
             <div class="instructions">Scegli SOLO i versetti che aiuteranno maggiormente a rispondere alla domanda successiva.</div>
-            <div class="rich-toolbar">
-                <button type="button" onclick="document.execCommand('bold',false,null)" title="Grassetto"><b>B</b></button>
-                <button type="button" onclick="document.execCommand('italic',false,null)" title="Corsivo"><i>I</i></button>
-                <button type="button" onclick="document.execCommand('underline',false,null)" title="Sottolineato"><u>U</u></button>
-                <button type="button" onclick="document.execCommand('insertUnorderedList',false,null)" title="Elenco puntato">•</button>
-            </div>
-            <div class="editor" contenteditable="true" id="passi_biblici" data-placeholder="Es. Giosuè 1:9 - spunto da evidenziare..."></div>
+            <div class="rich-toolbar"><button type="button" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" onclick="document.execCommand('insertUnorderedList',false,null)">•</button></div>
+            <div class="editor" contenteditable="true" id="passi_biblici" data-placeholder="Es. Giosuè 1:9..."></div>
         </div>
-
-        <!-- SCHEDA 3 -->
         <div class="card">
             <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">3</div>
-                    <div class="step-title">Per parlarne insieme</div>
-                </div>
-                <div class="timer-wrapper">
-                    <input type="number" class="t-min" value="10" min="1" max="99">
-                    <button class="t-play">▶</button>
-                    <button class="t-reset">↺</button>
-                    <span class="t-display">10:00</span>
-                </div>
+                <div class="step-header-left"><div class="step-number">3</div><div class="step-title">Per parlarne insieme</div></div>
+                <div class="timer-wrapper"><input type="number" class="t-min" value="10" min="1" max="99"><button class="t-play">▶</button><button class="t-reset">↺</button><span class="t-display">10:00</span></div>
             </div>
             <div class="instructions">Medita in preghiera sulla domanda principale. Annota i concetti chiave da far emergere.</div>
-            <div class="rich-toolbar">
-                <button type="button" onclick="document.execCommand('bold',false,null)" title="Grassetto"><b>B</b></button>
-                <button type="button" onclick="document.execCommand('italic',false,null)" title="Corsivo"><i>I</i></button>
-                <button type="button" onclick="document.execCommand('underline',false,null)" title="Sottolineato"><u>U</u></button>
-                <button type="button" onclick="document.execCommand('insertUnorderedList',false,null)" title="Elenco puntato">•</button>
-            </div>
-            <div class="editor" contenteditable="true" id="parlarne_insieme" data-placeholder="Scrivi qui i tuoi appunti..."></div>
+            <div class="rich-toolbar"><button type="button" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" onclick="document.execCommand('insertUnorderedList',false,null)">•</button></div>
+            <div class="editor" contenteditable="true" id="parlarne_insieme" data-placeholder="Appunti..."></div>
         </div>
-
-        <!-- SCHEDA 4 -->
         <div class="card">
             <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">4</div>
-                    <div class="step-title">Esame dell'Immagine</div>
-                </div>
-                <div class="timer-wrapper">
-                    <input type="number" class="t-min" value="5" min="1" max="99">
-                    <button class="t-play">▶</button>
-                    <button class="t-reset">↺</button>
-                    <span class="t-display">05:00</span>
-                </div>
+                <div class="step-header-left"><div class="step-number">4</div><div class="step-title">Esame dell'Immagine</div></div>
+                <div class="timer-wrapper"><input type="number" class="t-min" value="5" min="1" max="99"><button class="t-play">▶</button><button class="t-reset">↺</button><span class="t-display">05:00</span></div>
             </div>
             <div class="instructions">Cosa insegna sui personaggi e sul loro coraggio? (Lascia tempo ai presenti per commentare).</div>
-            <div class="rich-toolbar">
-                <button type="button" onclick="document.execCommand('bold',false,null)" title="Grassetto"><b>B</b></button>
-                <button type="button" onclick="document.execCommand('italic',false,null)" title="Corsivo"><i>I</i></button>
-                <button type="button" onclick="document.execCommand('underline',false,null)" title="Sottolineato"><u>U</u></button>
-                <button type="button" onclick="document.execCommand('insertUnorderedList',false,null)" title="Elenco puntato">•</button>
-            </div>
-            <div class="editor" contenteditable="true" id="esame_immagine" data-placeholder="Dettagli dell'immagine su cui soffermarsi..."></div>
+            <div class="rich-toolbar"><button type="button" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" onclick="document.execCommand('insertUnorderedList',false,null)">•</button></div>
+            <div class="editor" contenteditable="true" id="esame_immagine" data-placeholder="Dettagli dell'immagine..."></div>
         </div>
-
         <div class="section-title">Seconda Parte: Applicazione</div>
-
-        <!-- SCHEDA 5 -->
         <div class="card">
             <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">5</div>
-                    <div class="step-title">Vai più a fondo</div>
-                </div>
-                <div class="timer-wrapper">
-                    <input type="number" class="t-min" value="15" min="1" max="99">
-                    <button class="t-play">▶</button>
-                    <button class="t-reset">↺</button>
-                    <span class="t-display">15:00</span>
-                </div>
+                <div class="step-header-left"><div class="step-number">5</div><div class="step-title">Vai più a fondo</div></div>
+                <div class="timer-wrapper"><input type="number" class="t-min" value="15" min="1" max="99"><button class="t-play">▶</button><button class="t-reset">↺</button><span class="t-display">15:00</span></div>
             </div>
             <div class="instructions">Fai le domande indicate consultando le pubblicazioni. Annota i punti salienti.</div>
-            <div class="rich-toolbar">
-                <button type="button" onclick="document.execCommand('bold',false,null)" title="Grassetto"><b>B</b></button>
-                <button type="button" onclick="document.execCommand('italic',false,null)" title="Corsivo"><i>I</i></button>
-                <button type="button" onclick="document.execCommand('underline',false,null)" title="Sottolineato"><u>U</u></button>
-                <button type="button" onclick="document.execCommand('insertUnorderedList',false,null)" title="Elenco puntato">•</button>
-            </div>
-            <div class="editor" contenteditable="true" id="vai_fondo" data-placeholder="Punti chiave dalle pubblicazioni..."></div>
+            <div class="rich-toolbar"><button type="button" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" onclick="document.execCommand('insertUnorderedList',false,null)">•</button></div>
+            <div class="editor" contenteditable="true" id="vai_fondo" data-placeholder="Punti chiave..."></div>
         </div>
-
-        <!-- SCHEDA 6 -->
         <div class="card">
             <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">6</div>
-                    <div class="step-title">Una storia che ti riguarda</div>
-                </div>
-                <div class="timer-wrapper">
-                    <input type="number" class="t-min" value="10" min="1" max="99">
-                    <button class="t-play">▶</button>
-                    <button class="t-reset">↺</button>
-                    <span class="t-display">10:00</span>
-                </div>
+                <div class="step-header-left"><div class="step-number">6</div><div class="step-title">Una storia che ti riguarda</div></div>
+                <div class="timer-wrapper"><input type="number" class="t-min" value="10" min="1" max="99"><button class="t-play">▶</button><button class="t-reset">↺</button><span class="t-display">10:00</span></div>
             </div>
             <div class="instructions">Rifletti sulle lezioni pratiche, come metterle in pratica e come aiutare altri.</div>
-            <div class="rich-toolbar">
-                <button type="button" onclick="document.execCommand('bold',false,null)" title="Grassetto"><b>B</b></button>
-                <button type="button" onclick="document.execCommand('italic',false,null)" title="Corsivo"><i>I</i></button>
-                <button type="button" onclick="document.execCommand('underline',false,null)" title="Sottolineato"><u>U</u></button>
-                <button type="button" onclick="document.execCommand('insertUnorderedList',false,null)" title="Elenco puntato">•</button>
-            </div>
-            <div class="editor" contenteditable="true" id="storia_riguarda" data-placeholder="Applicazione pratica per noi..."></div>
+            <div class="rich-toolbar"><button type="button" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" onclick="document.execCommand('insertUnorderedList',false,null)">•</button></div>
+            <div class="editor" contenteditable="true" id="storia_riguarda" data-placeholder="Applicazione pratica..."></div>
         </div>
-
-        <!-- SCHEDA 7 -->
         <div class="card">
             <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">7</div>
-                    <div class="step-title">Una prospettiva più ampia</div>
-                </div>
-                <div class="timer-wrapper">
-                    <input type="number" class="t-min" value="5" min="1" max="99">
-                    <button class="t-play">▶</button>
-                    <button class="t-reset">↺</button>
-                    <span class="t-display">05:00</span>
-                </div>
+                <div class="step-header-left"><div class="step-number">7</div><div class="step-title">Una prospettiva più ampia</div></div>
+                <div class="timer-wrapper"><input type="number" class="t-min" value="5" min="1" max="99"><button class="t-play">▶</button><button class="t-reset">↺</button><span class="t-display">05:00</span></div>
             </div>
             <div class="instructions">Riflessioni profonde su Geova, sul suo proposito e sul nostro futuro.</div>
-            <div class="rich-toolbar">
-                <button type="button" onclick="document.execCommand('bold',false,null)" title="Grassetto"><b>B</b></button>
-                <button type="button" onclick="document.execCommand('italic',false,null)" title="Corsivo"><i>I</i></button>
-                <button type="button" onclick="document.execCommand('underline',false,null)" title="Sottolineato"><u>U</u></button>
-                <button type="button" onclick="document.execCommand('insertUnorderedList',false,null)" title="Elenco puntato">•</button>
-            </div>
-            <div class="editor" contenteditable="true" id="prospettiva_ampia" data-placeholder="Pensieri finali su Geova..."></div>
+            <div class="rich-toolbar"><button type="button" onclick="document.execCommand('bold',false,null)"><b>B</b></button><button type="button" onclick="document.execCommand('italic',false,null)"><i>I</i></button><button type="button" onclick="document.execCommand('underline',false,null)"><u>U</u></button><button type="button" onclick="document.execCommand('insertUnorderedList',false,null)">•</button></div>
+            <div class="editor" contenteditable="true" id="prospettiva_ampia" data-placeholder="Pensieri finali..."></div>
         </div>
-
         <div class="card ignored-card">
-            <div class="card-header">
-                <div class="step-header-left">
-                    <div class="step-number">8</div>
-                    <div class="step-title" style="color: #7f8c8d;">Scopri di più</div>
-                </div>
-            </div>
+            <div class="card-header"><div class="step-header-left"><div class="step-number">8</div><div class="step-title" style="color:#7f8c8d;">Scopri di più</div></div></div>
             <div class="instructions">NON da trattare durante lo studio. (Ricerca personale).</div>
         </div>
 
-        <!-- NUOVI PULSANTI DI GESTIONE -->
         <div class="action-container">
             <button type="button" class="btn-action btn-salva" id="btn_salva">💾 Salva Ora</button>
-            
             <div class="btn-grid">
                 <button type="button" class="btn-action btn-backup" id="btn_backup">⬇️ Esporta Backup</button>
                 <label for="file_restore" class="btn-action btn-ripristina" style="cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0;">⬆️ Ripristina</label>
                 <input type="file" id="file_restore" accept=".json" style="display:none;">
             </div>
-
             <button type="button" class="btn-action btn-clear" id="btn_cancella">🗑️ Svuota tutti i campi</button>
         </div>
     </div>
-
     <div class="toast" id="toast">Operazione completata!</div>
 
     <script>
+    document.addEventListener("DOMContentLoaded", () => {
         const toast = document.getElementById('toast');
-        function showToast(messaggio) {
-            toast.textContent = messaggio;
-            toast.style.opacity = '1';
-            setTimeout(() => { toast.style.opacity = '0'; }, 2500);
-        }
+        function showToast(msg) { toast.textContent = msg; toast.style.opacity = '1'; setTimeout(() => { toast.style.opacity = '0'; }, 2500); }
 
-        // --- GESTIONE ERRORI LOCALSTORAGE ---
-        function safeSetStorage(key, value) {
-            try { localStorage.setItem(key, value); return true; } 
-            catch(e) { return false; }
-        }
-        function safeGetStorage(key) {
-            try { return localStorage.getItem(key); } 
-            catch(e) { return null; }
-        }
-        function safeClearStorage() {
-            try { localStorage.clear(); } 
-            catch(e) {}
-        }
+        function safeSetStorage(key, val) { try { localStorage.setItem(key, val); return true; } catch(e) { return false; } }
+        function safeGetStorage(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
 
-        // --- TIMERS ---
-        try {
-            document.querySelectorAll('.timer-wrapper').forEach(wrapper => {
-                const input = wrapper.querySelector('.t-min');
-                const playBtn = wrapper.querySelector('.t-play');
-                const resetBtn = wrapper.querySelector('.t-reset');
-                const display = wrapper.querySelector('.t-display');
-                
-                let timeLeft = parseInt(input.value) * 60;
-                let isRunning = false;
-                let interval;
+        // TIMERS
+        document.querySelectorAll('.timer-wrapper').forEach(wrapper => {
+            const input = wrapper.querySelector('.t-min');
+            const playBtn = wrapper.querySelector('.t-play');
+            const resetBtn = wrapper.querySelector('.t-reset');
+            const display = wrapper.querySelector('.t-display');
+            let timeLeft = parseInt(input.value) * 60, isRunning = false, interval;
 
-                function updateDisplay() {
-                    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-                    const s = (timeLeft % 60).toString().padStart(2, '0');
-                    display.textContent = `${m}:${s}`;
-                    if(timeLeft <= 0) display.classList.add('timer-alert');
-                    else display.classList.remove('timer-alert');
+            function updateDisplay() {
+                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                const s = (timeLeft % 60).toString().padStart(2, '0');
+                display.textContent = `${m}:${s}`;
+                if(timeLeft <= 0) display.classList.add('timer-alert'); else display.classList.remove('timer-alert');
+            }
+            updateDisplay();
+
+            input.addEventListener('change', () => { if(!isRunning) { timeLeft = parseInt(input.value) * 60; updateDisplay(); } });
+            playBtn.addEventListener('click', () => {
+                if(isRunning) { clearInterval(interval); playBtn.innerHTML = '▶'; isRunning = false; } 
+                else {
+                    if(timeLeft <= 0) timeLeft = parseInt(input.value) * 60;
+                    playBtn.innerHTML = '⏸'; isRunning = true;
+                    interval = setInterval(() => {
+                        timeLeft--; updateDisplay();
+                        if(timeLeft <= 0) { clearInterval(interval); playBtn.innerHTML = '▶'; isRunning = false; }
+                    }, 1000);
                 }
-                updateDisplay();
+            });
+            resetBtn.addEventListener('click', () => { clearInterval(interval); isRunning = false; playBtn.innerHTML = '▶'; timeLeft = parseInt(input.value) * 60; updateDisplay(); });
+        });
 
-                input.addEventListener('change', () 
+        // SALVATAGGIO
+        const elements = document.querySelectorAll('input:not(.t-min):not([type="file"]), .editor');
+        elements.forEach(el => {
+            if(!el.id) return;
+            const savedValue = safeGetStorage(el.id);
+            if (savedValue !== null) {
+                if (el.type === 'checkbox') el.checked = (savedValue === 'true');
+                else if (el.classList.contains('editor')) el.innerHTML = savedValue;
+                else el.value = savedValue;
+            }
+            el.addEventListener('input', () => {
+                const val = el.type === 'checkbox' ? el.checked : (el.classList.contains('editor') ? el.innerHTML : el.value);
+                safeSetStorage(el.id, val);
+            });
+        });
+
+        document.getElementById('btn_salva').addEventListener('click', () => {
+            elements.forEach(el => {
+                if(!el.id) return;
+                const val = el.type === 'checkbox' ? el.checked : (el.classList.contains('editor') ? el.innerHTML : el.value);
+                safeSetStorage(el.id, val);
+            });
+            showToast("Appunti salvati!");
+        });
+
+        document.getElementById('btn_backup').addEventListener('click', () => {
+            const data = {};
+            elements.forEach(el => {
+                if(!el.id) return;
+                data[el.id] = el.type === 'checkbox' ? el.checked : (el.classList.contains('editor') ? el.innerHTML : el.value);
+            });
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `Studio_Biblico.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            showToast("Backup scaricato!");
+        });
+
+        document.getElementById('file_restore').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = JSON.parse(evt.target.result);
+                    elements.forEach(el => {
+                        if(!el.id || data[el.id] === undefined) return;
+                        if (el.type === 'checkbox') el.checked = data[el.id];
+                        else if (el.classList.contains('editor')) el.innerHTML = data[el.id];
+                        else el.value = data[el.id];
+                        safeSetStorage(el.id, data[el.id]);
+                    });
+                    showToast("Dati ripristinati!");
+                    e.target.value = ""; 
+                } catch(err) { alert("File non valido."); }
+            };
+            reader.readAsText(file);
+        });
+
+        document.getElementById('btn_cancella').addEventListener('click', () => {
+            if(confirm('Vuoi svuotare tutto?')) {
+                try { localStorage.clear(); } catch(e) {}
+                elements.forEach(el => {
+                    if (el.type === 'checkbox') el.checked = false;
+                    else if (el.classList.contains('editor')) el.innerHTML = '';
+                    else el.value = '';
+                });
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                showToast("Campi svuotati!");
+            }
+        });
+    });
+    </script>
+</body>
+</html>
